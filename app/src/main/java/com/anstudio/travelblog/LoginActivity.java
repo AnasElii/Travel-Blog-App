@@ -2,7 +2,9 @@ package com.anstudio.travelblog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -89,5 +91,17 @@ public class LoginActivity extends Activity {
         // Disable The Inputs
         textUsernameLayout.setEnabled(false);
         textPasswordInput.setEnabled(false);
+
+        // Display MainActivity
+        Handler handler = new Handler();
+        handler.postDelayed(()-> {
+            startMainActivity();
+            finish();
+        }, 2000);
+    }
+
+    private void startMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
