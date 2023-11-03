@@ -2,7 +2,9 @@ package com.anstudio.travelblog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -22,10 +24,19 @@ public class LoginActivity extends Activity {
     private TextInputLayout textPasswordInput;
     private Button loginButton;
     private ProgressBar progressBar;
+    private BlogPreferences preferences;
 
     @Override
     protected void onCreate(@Nullable Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
+
+        // Check if the user loginIn or not
+        preferences = new BlogPreferences(this);
+        if(preferences.isLoggedIn()){
+            startMainActivity();
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_login);
 
         //
@@ -34,7 +45,7 @@ public class LoginActivity extends Activity {
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
 
-        // Connecte Buttons And Inputs With Listeners
+        // Connect Buttons And Inputs With Listeners
         loginButton.setOnClickListener(v -> onLoginClicked());
         textUsernameLayout.getEditText().addTextChangedListener(createTextWatcher(textUsernameLayout));
         textPasswordInput.getEditText().addTextChangedListener(createTextWatcher(textPasswordInput));
@@ -84,6 +95,9 @@ public class LoginActivity extends Activity {
     }
 
     private void performLogin(){
+        // Set Login Flag
+        preferences.setLoggedIn(true);
+
         // Show The Progress Bar
         loginButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
