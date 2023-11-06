@@ -3,23 +3,36 @@ package com.anstudio.travelblog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.text.Html;
+import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class BlogDetailsActivity extends AppCompatActivity {
 
-    public static final String IMAGE_URL =
-            "https://bitbucket.org/dmytrodanylyk/travel-blog-resources/raw/"+
-                    "3436e16367c8ec2312a0644bebd2694d484eb047/images/sydney_image.jpg";
-    public static final String AVATAR_URL =
-            "https://bitbucket.org/dmytrodanylyk/travel-blog-resources/raw/"+
-                    "3436e16367c8ec2312a0644bebd2694d484eb047/avatars/avatar1.jpg";
+    private TextView textTitle;
+    private TextView textDate;
+    private TextView textAuthor;
+    private TextView textRating;
+    private TextView textViews;
+    private TextView textDescription;
+    private RatingBar ratingBar;
+    private ImageView imageMain;
+    private ImageView imageAvatar;
+    private ImageView imageBack;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle saveInstanceState){
@@ -29,40 +42,82 @@ public class BlogDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_blog_details);
 
         // Bind Elements inside the XML Page with Java Fields
-        ImageView imageMain = findViewById(R.id.imageMain);
-        Glide.with(this)
-                .load(IMAGE_URL)
-                .into(imageMain);
-//        imageMain.setImageResource(R.drawable.sydney_image);
+        imageMain = findViewById(R.id.imageMain);
 
-        ImageView imageAvatar = findViewById(R.id.imageAvatar);
-        Glide.with(this)
-                .load(AVATAR_URL)
-                .into(imageAvatar);
-//        imageAvatar.setImageResource(R.drawable.avatar);
+        imageAvatar = findViewById(R.id.imageAvatar);
 
-        TextView textTitle = findViewById(R.id.textTitle);
-        textTitle.setText("G'day from Sydney");
+        textTitle = findViewById(R.id.textTitle);
 
-        TextView textDate = findViewById(R.id.textDate);
-        textDate.setText("November 3, 2023");
+        textDate = findViewById(R.id.textDate);
 
-        TextView textAuthor = findViewById(R.id.textAuthor);
-        textAuthor.setText("Anas El");
+        textAuthor = findViewById(R.id.textAuthor);
 
-        TextView textRating = findViewById(R.id.textRating);
-        textRating.setText("4.4");
+        textRating = findViewById(R.id.textRating);
 
-        TextView textViews = findViewById(R.id.textViews);
-        textViews.setText("2521 views");
+        textViews = findViewById(R.id.textViews);
 
-        TextView textDescription = findViewById(R.id.textDescription);
-        textDescription.setText("Australia is one of the most popular travel destinations in the world.");
+        textDescription = findViewById(R.id.textDescription);
 
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        ratingBar.setRating(4.4f);
+        ratingBar = findViewById(R.id.ratingBar);
 
-        ImageView imageBack = findViewById(R.id.imageBack);
+        // Back Image
+        imageBack = findViewById(R.id.imageBack);
         imageBack.setOnClickListener(v -> finish());
+
+        // Progress Bar Binding
+        progressBar = findViewById(R.id.progressBar);
+
+        // Start data loading
+        loadData();
+    }
+
+    private void loadData(){
+        BlogHttpClient.INSTANCE.loadBlogArticles( new BlogArticlesCallback() {
+            @Override
+            public void onSuccess(List<Blog> blogList){
+                runOnUiThread(() -> showData(blogList.get(0)));
+            }
+
+            @Override
+            public void onError(){
+                runOnUiThread(() -> showErrorSnackbar());
+            }
+        });
+    }
+
+    private void showData(Blog blog){
+        progressBar.setVisibility(View.GONE);
+        textTitle.setText(blog.getTitle());
+        textDate.setText(blog.getDate());
+        textAuthor.setText(blog.getAuthor().getName());
+        textViews.setText(String.format("(%d views)", blog.getViews()));
+        textRating.setText(String.valueOf(blog.getRating()));
+        textDescription.setText(Html.fromHtml(blog.getDescription(), 0));
+
+        // Set Rating
+        ratingBar.setRating(blog.getRating());
+
+        // Set Images
+        Glide.with(this)
+                .load(blog.getImageURL())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageMain);
+
+        Glide.with(this)
+                .load(blog.getAuthor().getAvatarURL())
+                .transform(new CircleCrop())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageAvatar);
+    }
+
+    private void showErrorSnackbar(){
+        View rootView = findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(rootView, "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(getResources().getColor(R.color.grey500));
+        snackbar.setAction("Retry", v -> {
+           loadData();
+           snackbar.dismiss();
+        });
+        snackbar.show();
     }
 }

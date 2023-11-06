@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/imageMain"
         android:layout_width="0dp"
         android:layout_height="250dp"
         tools:src="@drawable/sydney_image"
-        android:background="#ff0000"
         android:scaleType="centerCrop"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +98,9 @@
         android:isIndicator="true"
         android:numStars="5"
         tools:rating="4.4"
+        tools:visibility="visible"
         android:stepSize="0.1"
+
 
         app:layout_constraintTop_toBottomOf="@+id/textAuthor"
         app:layout_constraintStart_toEndOf="@+id/imageAvatar"
@@ -133,6 +139,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:paddingBottom="15dp"
         tools:text="Australia is one of the most popular travel destinations in the world."
 
         app:layout_constraintStart_toStartOf="parent"
@@ -149,4 +156,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_arrow_back_24px"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

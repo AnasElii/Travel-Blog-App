@@ -1,10 +1,10 @@
 package com.anstudio.travelblog;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.View;
+import com.google.android.material.snackbar.Snackbar;
+import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -12,7 +12,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startActivity(new Intent(this, BlogDetailsActivity.class));
+        loadData();
+    }
+
+
+    private void loadData() {
+        BlogHttpClient.INSTANCE.loadBlogArticles(new BlogArticlesCallback() {
+            @Override
+            public void onSuccess(List<Blog> blogList) {
+                runOnUiThread(() -> {
+                    // TODO show data
+                });
+            }
+
+            @Override
+            public void onError() {
+                runOnUiThread(() -> {
+                    showErrorSnackbar();
+                });
+            }
+        });
+    }
+
+    private void showErrorSnackbar() {
+        View rootView = findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(rootView, "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(getResources().getColor(R.color.orange500));
+        snackbar.setAction("Retry", v -> {
+            loadData();
+            snackbar.dismiss();
+        });
+        snackbar.show();
     }
 
 }
