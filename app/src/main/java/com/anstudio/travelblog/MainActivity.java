@@ -1,16 +1,30 @@
 package com.anstudio.travelblog;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import android.view.View;
+
+import com.anstudio.travelblog.adapter.MainAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private MainAdapter mainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainAdapter = new MainAdapter();
+
+        RecyclerView recyclerView = findViewById(R.id.recycleView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mainAdapter);
 
         loadData();
     }
@@ -21,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(List<Blog> blogList) {
                 runOnUiThread(() -> {
-                    // TODO show data
+                    mainAdapter.submitList(blogList);
                 });
             }
 
