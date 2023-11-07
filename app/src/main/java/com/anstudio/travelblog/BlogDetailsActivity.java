@@ -1,9 +1,13 @@
 package com.anstudio.travelblog;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -18,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Console;
 import java.util.List;
 
 public class BlogDetailsActivity extends AppCompatActivity {
@@ -33,6 +38,8 @@ public class BlogDetailsActivity extends AppCompatActivity {
     private ImageView imageAvatar;
     private ImageView imageBack;
     private ProgressBar progressBar;
+
+    private static final String EXTRAS_BLOG = "EXTRAS_BLOG";
 
     @Override
     protected void onCreate(@Nullable Bundle saveInstanceState){
@@ -67,8 +74,14 @@ public class BlogDetailsActivity extends AppCompatActivity {
         // Progress Bar Binding
         progressBar = findViewById(R.id.progressBar);
 
-        // Start data loading
-        loadData();
+        Blog blog = getIntent()
+                .getExtras()
+                .getParcelable(EXTRAS_BLOG);
+
+        Log.e("Blog", blog.getId().toString());
+
+        //  Show Data
+//        showData(blog);
     }
 
     private void loadData(){
@@ -115,9 +128,15 @@ public class BlogDetailsActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar.make(rootView, "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(getResources().getColor(R.color.grey500));
         snackbar.setAction("Retry", v -> {
-           loadData();
+//           loadData();
            snackbar.dismiss();
         });
         snackbar.show();
+    }
+
+    public static void startBlogDetailsActivity(Activity activity, Blog blog) {
+        Intent intent = new Intent(activity, BlogDetailsActivity.class);
+        intent.putExtra(EXTRAS_BLOG, blog);
+        activity.startActivity(intent);
     }
 }

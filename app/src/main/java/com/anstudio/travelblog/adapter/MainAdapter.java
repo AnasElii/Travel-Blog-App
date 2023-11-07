@@ -20,6 +20,12 @@ import com.bumptech.glide.request.transition.DrawableCrossFadeTransition;
 
 public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
 
+    public interface OnItemClickListener{
+        void onItemClicked(Blog blog);
+    }
+
+    private OnItemClickListener clickListener;
+
     private static final DiffUtil.ItemCallback<Blog> DIFF_CALLBACK = new DiffUtil.ItemCallback<Blog>() {
         @Override
         public boolean areItemsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
@@ -32,15 +38,17 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
         }
     };
 
-    public MainAdapter(){
+    public MainAdapter(OnItemClickListener clickListener){
+
         super(DIFF_CALLBACK);
+        this.clickListener = clickListener;
     }
 
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_main, parent, false);
-        return new MainViewHolder(view);
+        return new MainViewHolder(view, clickListener);
     }
 
     @Override
@@ -53,10 +61,13 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
         TextView textTitle;
         TextView textDate;
         ImageView imageView;
+        private Blog blog;
 
-        MainViewHolder(@NonNull View itemView){
+
+        MainViewHolder(@NonNull View itemView, OnItemClickListener listener){
             super(itemView);
 
+            itemView.setOnClickListener(v -> listener.onItemClicked(blog));
             textTitle = itemView.findViewById(R.id.textTitle);
             textDate = itemView.findViewById(R.id.textDate);
             imageView = itemView.findViewById(R.id.imageAvatar);
