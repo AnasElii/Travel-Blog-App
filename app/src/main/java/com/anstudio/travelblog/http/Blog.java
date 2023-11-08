@@ -1,4 +1,4 @@
-package com.anstudio.travelblog;
+package com.anstudio.travelblog.http;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,42 +14,6 @@ public class Blog implements Parcelable {
     private int views;
     private float rating;
     private String image;
-
-    public String getId() {
-        return id;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getImageURL() {
-        return BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public float getRating() {
-        return rating;
-    }
 
     protected Blog(Parcel in) {
         id = in.readString();
@@ -90,6 +54,42 @@ public class Blog implements Parcelable {
             return new Blog[size];
         }
     };
+
+    public String getId() {
+        return id;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getImageURL() {
+        return BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public float getRating() {
+        return rating;
+    }
 
     // Override the equals method
     @Override

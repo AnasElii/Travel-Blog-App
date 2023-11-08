@@ -1,4 +1,4 @@
-package com.anstudio.travelblog;
+package com.anstudio.travelblog.http;
 
 import android.os.Parcel;
 import android.os.Parcelable;

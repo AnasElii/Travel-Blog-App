@@ -1,4 +1,4 @@
-package com.anstudio.travelblog;
+package com.anstudio.travelblog.http;
 
 import android.util.Log;
 
@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

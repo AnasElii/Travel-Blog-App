@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.anstudio.travelblog.http.Blog;
+import com.anstudio.travelblog.http.BlogArticlesCallback;
+import com.anstudio.travelblog.http.BlogHttpClient;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -22,10 +24,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Console;
 import java.util.List;
 
 public class BlogDetailsActivity extends AppCompatActivity {
+
+    private static final String EXTRAS_BLOG = "EXTRAS_BLOG";
 
     private TextView textTitle;
     private TextView textDate;
@@ -39,8 +42,6 @@ public class BlogDetailsActivity extends AppCompatActivity {
     private ImageView imageBack;
     private ProgressBar progressBar;
 
-    private static final String EXTRAS_BLOG = "EXTRAS_BLOG";
-
     @Override
     protected void onCreate(@Nullable Bundle saveInstanceState){
 
@@ -50,7 +51,6 @@ public class BlogDetailsActivity extends AppCompatActivity {
 
         // Bind Elements inside the XML Page with Java Fields
         imageMain = findViewById(R.id.imageMain);
-
         imageAvatar = findViewById(R.id.imageAvatar);
 
         textTitle = findViewById(R.id.textTitle);
@@ -78,25 +78,25 @@ public class BlogDetailsActivity extends AppCompatActivity {
                 .getExtras()
                 .getParcelable(EXTRAS_BLOG);
 
-        Log.e("Blog", blog.getId().toString());
-
         //  Show Data
-//        showData(blog);
+        showData(getIntent()
+                .getExtras()
+                .getParcelable(EXTRAS_BLOG));
     }
 
-    private void loadData(){
-        BlogHttpClient.INSTANCE.loadBlogArticles( new BlogArticlesCallback() {
-            @Override
-            public void onSuccess(List<Blog> blogList){
-                runOnUiThread(() -> showData(blogList.get(0)));
-            }
-
-            @Override
-            public void onError(){
-                runOnUiThread(() -> showErrorSnackbar());
-            }
-        });
-    }
+//    private void loadData(){
+//        BlogHttpClient.INSTANCE.loadBlogArticles(new BlogArticlesCallback() {
+//            @Override
+//            public void onSuccess(List<Blog> blogList){
+//                runOnUiThread(() -> showData(blogList.get(0)));
+//            }
+//
+//            @Override
+//            public void onError(){
+//                runOnUiThread(() -> showErrorSnackbar());
+//            }
+//        });
+//    }
 
     private void showData(Blog blog){
         progressBar.setVisibility(View.GONE);
@@ -109,6 +109,7 @@ public class BlogDetailsActivity extends AppCompatActivity {
 
         // Set Rating
         ratingBar.setRating(blog.getRating());
+        ratingBar.setVisibility(View.VISIBLE);
 
         // Set Images
         Glide.with(this)
@@ -123,16 +124,16 @@ public class BlogDetailsActivity extends AppCompatActivity {
                 .into(imageAvatar);
     }
 
-    private void showErrorSnackbar(){
-        View rootView = findViewById(android.R.id.content);
-        Snackbar snackbar = Snackbar.make(rootView, "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setActionTextColor(getResources().getColor(R.color.grey500));
-        snackbar.setAction("Retry", v -> {
+//    private void showErrorSnackbar(){
+//        View rootView = findViewById(android.R.id.content);
+//        Snackbar snackbar = Snackbar.make(rootView, "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE);
+//        snackbar.setActionTextColor(getResources().getColor(R.color.grey500));
+//        snackbar.setAction("Retry", v -> {
 //           loadData();
-           snackbar.dismiss();
-        });
-        snackbar.show();
-    }
+//           snackbar.dismiss();
+//        });
+//        snackbar.show();
+//    }
 
     public static void startBlogDetailsActivity(Activity activity, Blog blog) {
         Intent intent = new Intent(activity, BlogDetailsActivity.class);

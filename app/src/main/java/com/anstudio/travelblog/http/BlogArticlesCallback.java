@@ -1,4 +1,6 @@
-package com.anstudio.travelblog;
+package com.anstudio.travelblog.http;
+
+import com.anstudio.travelblog.http.Blog;
 
 import java.util.List;
 

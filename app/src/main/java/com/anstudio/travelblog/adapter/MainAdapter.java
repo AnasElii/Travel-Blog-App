@@ -11,12 +11,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anstudio.travelblog.Blog;
+import com.anstudio.travelblog.http.Blog;
 import com.anstudio.travelblog.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.transition.DrawableCrossFadeTransition;
 
 public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
 
@@ -26,28 +25,16 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
 
     private OnItemClickListener clickListener;
 
-    private static final DiffUtil.ItemCallback<Blog> DIFF_CALLBACK = new DiffUtil.ItemCallback<Blog>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
-            return oldItem.getId().equals(newItem.getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
-
     public MainAdapter(OnItemClickListener clickListener){
-
         super(DIFF_CALLBACK);
         this.clickListener = clickListener;
     }
 
+    @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_main, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.item_main, parent, false);
         return new MainViewHolder(view, clickListener);
     }
 
@@ -58,9 +45,9 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
 
     class MainViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textTitle;
-        TextView textDate;
-        ImageView imageView;
+        private TextView textTitle;
+        private TextView textDate;
+        private ImageView imageView;
         private Blog blog;
 
 
@@ -74,6 +61,7 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
         }
 
         void bindTo(Blog blog){
+            this.blog = blog;
             textTitle.setText(blog.getTitle());
             textDate.setText(blog.getDate());
 
@@ -85,5 +73,17 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
         }
 
     }
+
+    private static final DiffUtil.ItemCallback<Blog> DIFF_CALLBACK = new DiffUtil.ItemCallback<Blog>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
 }

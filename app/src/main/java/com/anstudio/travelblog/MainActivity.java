@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.anstudio.travelblog.adapter.MainAdapter;
+import com.anstudio.travelblog.http.Blog;
+import com.anstudio.travelblog.http.BlogArticlesCallback;
+import com.anstudio.travelblog.http.BlogHttpClient;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
@@ -40,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         BlogHttpClient.INSTANCE.loadBlogArticles(new BlogArticlesCallback() {
             @Override
             public void onSuccess(List<Blog> blogList) {
-                swipeRefreshLayout.setRefreshing(false);
                 runOnUiThread(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
                     mainAdapter.submitList(blogList);
                 });
             }
