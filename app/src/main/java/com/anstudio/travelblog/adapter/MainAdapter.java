@@ -23,6 +23,8 @@ import java.util.List;
 
 public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
 
+    private List<Blog> originalList = new ArrayList<>();
+
     public interface OnItemClickListener{
         void onItemClicked(Blog blog);
     }
@@ -91,6 +93,23 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
         submitList(currentList);
     }
 
+    // Search
+    public void setData(@NonNull List<Blog> list){
+        originalList = list;
+        super.submitList(list);
+    }
+
+    public void filter(String query){
+        List<Blog> filterdList = new ArrayList<>();
+        for (Blog blog : originalList) {
+            if(blog.getTitle().toLowerCase().contains(query.toLowerCase())){
+                filterdList.add(blog);
+            }
+        }
+        submitList(filterdList);
+    }
+
+    //
     private static final DiffUtil.ItemCallback<Blog> DIFF_CALLBACK = new DiffUtil.ItemCallback<Blog>() {
         @Override
         public boolean areItemsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
