@@ -3,13 +3,18 @@ package com.anstudio.travelblog.http;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Blog implements Parcelable {
+
     private String id;
     private Author author;
     private String title;
     private String date;
+    private static final SimpleDateFormat dateForma = new SimpleDateFormat("MMMM dd, yyyy");
     private String description;
     private int views;
     private float rating;
@@ -73,6 +78,17 @@ public class Blog implements Parcelable {
 
     public String getDate() {
         return date;
+    }
+
+    public Long getDateMillis(){
+        try{
+            Date date = dateForma.parse(getDate());
+            return date != null ? date.getTime() : null;
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public String getImageURL() {
