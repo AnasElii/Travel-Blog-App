@@ -113,7 +113,7 @@ public class MainAdapter extends ListAdapter<Blog, MainAdapter.MainViewHolder> {
     private static final DiffUtil.ItemCallback<Blog> DIFF_CALLBACK = new DiffUtil.ItemCallback<Blog>() {
         @Override
         public boolean areItemsTheSame(@NonNull Blog oldItem, @NonNull Blog newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return oldItem.getId().equals(Integer.toString(newItem.getId()));
         }
 
         @Override

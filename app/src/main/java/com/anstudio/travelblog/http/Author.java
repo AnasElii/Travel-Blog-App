@@ -3,11 +3,18 @@ package com.anstudio.travelblog.http;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+
 import java.util.Objects;
 
 public class Author implements Parcelable {
     private String name;
     private String avatar;
+
+    public Author(String name, String avatar) {
+        this.name = name;
+        this.avatar = avatar;
+    }
 
     protected Author(Parcel parcel){
         name = parcel.readString();
@@ -40,6 +47,8 @@ public class Author implements Parcelable {
     public String getName() {
         return name;
     }
+
+    public String getAvatar() { return avatar; }
 
     public String getAvatarURL() {
 

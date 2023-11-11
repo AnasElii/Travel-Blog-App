@@ -8,10 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import androidx.room.*;
+
+@Entity
 public class Blog implements Parcelable {
 
-    private String id;
+    @PrimaryKey
+    private int id;
+
+    @Embedded
     private Author author;
+
     private String title;
     private String date;
     private static final SimpleDateFormat dateForma = new SimpleDateFormat("MMMM dd, yyyy");
@@ -20,8 +27,20 @@ public class Blog implements Parcelable {
     private float rating;
     private String image;
 
+    public Blog(int id, Author author, String title, String date, String image,
+                String description, int views, float rating) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.date = date;
+        this.image = image;
+        this.description = description;
+        this.views = views;
+        this.rating = rating;
+    }
+
     protected Blog(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         title = in.readString();
         date = in.readString();
         image = in.readString();
@@ -33,7 +52,7 @@ public class Blog implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(date);
         dest.writeString(image);
@@ -60,7 +79,7 @@ public class Blog implements Parcelable {
         }
     };
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -91,6 +110,8 @@ public class Blog implements Parcelable {
         return null;
     }
 
+    public String getImage() { return image; }
+
     public String getImageURL() {
         return BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image;
     }
@@ -106,6 +127,8 @@ public class Blog implements Parcelable {
     public float getRating() {
         return rating;
     }
+
+
 
     // Override the equals method
     @Override
